@@ -1,0 +1,11 @@
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }}. Thanks for logging in. <a href="{% url "logout" %}?next={{request.path}}">Logout</a></p>
+{% else %}
+    <a href="{% url "social:begin" "google-oauth2" %}?next={{request.path}}">Google Login</a>
+     <a href="{% url 'social:begin' 'github' %}?next={{request.path}}">Login with GitHub</a><br>
+     <a href="{% url 'social:begin' 'facebook' %}?next={{request.path}}">Login with Facebook</a><br/>
+{% endif %}
+
+
+
+<p>Hello World</p>
