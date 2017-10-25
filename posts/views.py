@@ -6,4 +6,7 @@ def index(request):
     """Index Views."""
     return render(request, 'posts/index.html')
 
-# Create your views here.
+
+def posts(request):
+    """Post Views."""
+    return render(request, 'posts/posts.html')
