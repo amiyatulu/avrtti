@@ -9,6 +9,7 @@ class PostHash(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=30)
     title = models.CharField(max_length=100)
+    description = models.TextField()
     create_time = models.DateTimeField(auto_now=True)
     update_time = models.DateTimeField(auto_now_add=True)
 
