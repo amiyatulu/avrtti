@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms.models import ModelForm
 
 class PostHash(models.Model):
     describe_change = models.TextField()
@@ -13,7 +14,7 @@ class Tag(models.Model):
     create_time = models.DateTimeField(auto_now=True)
     update_time = models.DateTimeField(auto_now_add=True)
 
-class Posts(models.Model):
+class Post(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     create_time = models.DateTimeField(auto_now=True)
@@ -30,10 +31,25 @@ class ReviewHash(models.Model):
     create_time = models.DateTimeField(auto_now=True)
     update_time = models.DateTimeField(auto_now_add=True)
 
-class ReviewPosts(models.Model):
-    posts = models.OneToOneField(Posts, on_delete=models.CASCADE)
+class ReviewPost(models.Model):
+    posts = models.OneToOneField(Post, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField()
     create_time = models.DateTimeField(auto_now=True)
     update_time = models.DateTimeField(auto_now_add=True)
     review_hash = models.ForeignKey(ReviewHash, on_delete=models.CASCADE)
+
+class PostsForm(ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'description']
+
+class PostHashForm(ModelForm):
+    class Meta:
+        model = PostHash
+        fields = ['describe_change']
+
+class TagForm(ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['name', 'title', 'description']

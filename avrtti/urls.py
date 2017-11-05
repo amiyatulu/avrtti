@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('django.contrib.auth.urls')),
     url('', include('social_django.urls', namespace='social')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
