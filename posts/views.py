@@ -5,8 +5,34 @@ from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
-from posts.serializers import PostSerializer, PostHashSerializer, TagSerializer
+from rest_framework import viewsets, generics, status
+from posts.serializers import PostSerializer, PostHashSerializer, TagSerializer, UserSerializer, UserASerializer
+from django.http import Http404
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserASerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserASerializer
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def create_user(request):
+    serialized = UserSerializer(data=request.data)
+    if serialized.is_valid():
+        serialized.save()
+        return Response(serialized.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -32,7 +58,9 @@ class TagViewSet(viewsets.ModelViewSet):
 
 def index(request):
     """Index Views."""
-    return render(request, 'posts/index.html')
+    data = render(request, 'posts/index.html')
+    data['Access-Control-Allow-Origin'] = '*'
+    return data
 
 def viewPosts(request, post_id):
     post = Post.object.get(pk=post_id)

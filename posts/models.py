@@ -1,11 +1,6 @@
 from django.db import models
 from django.forms.models import ModelForm
-
-class PostHash(models.Model):
-    describe_change = models.TextField()
-    hashcode = models.CharField(max_length=30)
-    create_time = models.DateTimeField(auto_now=True)
-    update_time = models.DateTimeField(auto_now_add=True)
+from django.contrib.auth.models import User
 
 class Tag(models.Model):
     name = models.CharField(max_length=30)
@@ -19,17 +14,20 @@ class Post(models.Model):
     description = models.TextField()
     create_time = models.DateTimeField(auto_now=True)
     update_time = models.DateTimeField(auto_now_add=True)
-    post_hash = models.ForeignKey(PostHash, on_delete=models.CASCADE)
     tags = models.ManyToManyField(
         Tag,
         related_name="tags",
         related_query_name="tag",)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-class ReviewHash(models.Model):
+class PostHash(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     describe_change = models.TextField()
     hashcode = models.CharField(max_length=30)
     create_time = models.DateTimeField(auto_now=True)
     update_time = models.DateTimeField(auto_now_add=True)
+
+
 
 class ReviewPost(models.Model):
     posts = models.OneToOneField(Post, on_delete=models.CASCADE)
@@ -37,7 +35,14 @@ class ReviewPost(models.Model):
     description = models.TextField()
     create_time = models.DateTimeField(auto_now=True)
     update_time = models.DateTimeField(auto_now_add=True)
-    review_hash = models.ForeignKey(ReviewHash, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class ReviewHash(models.Model):
+    reviewpost = models.ForeignKey(ReviewPost, on_delete=models.CASCADE)
+    describe_change = models.TextField()
+    hashcode = models.CharField(max_length=30)
+    create_time = models.DateTimeField(auto_now=True)
+    update_time = models.DateTimeField(auto_now_add=True)
 
 class PostsForm(ModelForm):
     class Meta:
